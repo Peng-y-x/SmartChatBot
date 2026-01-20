@@ -1,0 +1,57 @@
+[project]
+name = "smartchatbot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "authlib>=1.6.6",
+    "chat-client-api",
+    "discord-client-impl",
+    "ai-client-api",
+    "claude-client-impl",
+    "mail-client-api",
+    "gmail-client-impl",
+    "fastapi>=0.128.0",
+    "httpx>=0.28.1",
+    "uvicorn[standard]>=0.40.0",
+    "anthropic>=0.75.0",
+    "google-api-python-client>=2.187.0",
+    "google-auth>=2.45.0",
+    "google-auth-oauthlib>=1.2.2",
+    "google-auth-httplib2>=0.3.0",
+    "discord.py>=2.5.2",
+    "discord>=2.3.2",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19.1",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.10",
+]
+
+[tool.uv.workspace]
+members = [
+    "src/chat_client_api",
+    "src/discord_client_impl",
+    "src/smart_chat_bot",
+    "src/ai_client_api",
+    "src/claude_client_impl",
+    "src/mail_client_api",
+    "src/gmail_client_impl",
+]
+
+[tool.uv.sources]
+chat-client-api = { workspace = true, editable = true }
+discord-client-impl = { workspace = true, editable = true }
+ai-client-api = { workspace = true, editable = true }
+claude-client-impl = { workspace = true, editable = true }
+mail-client-api = { workspace = true, editable = true }
+gmail-client-impl = { workspace = true, editable = true }
+
+[tool.pytest.ini_options]
+addopts = "--cov --cov-report=term-missing --cov-fail-under=60"
+pythonpath = ["."]
