@@ -1,6 +1,9 @@
+from typing import cast
+
 import pytest
 
 import main
+import chat_client_api
 
 
 class _DummyMessage:
@@ -67,7 +70,7 @@ def test_split_message_chunks() -> None:
 @pytest.mark.asyncio
 async def test_handler_login_sends_link(monkeypatch: pytest.MonkeyPatch) -> None:
     chat_client = _DummyChatClient()
-    handler = main._make_chat_handler(chat_client)
+    handler = main._make_chat_handler(cast(chat_client_api.ChatClient, chat_client))
 
     monkeypatch.setattr(main, "_parse_command", lambda _content: ({"action": "login"}, None))
     monkeypatch.setattr(main, "_get_mail_client", lambda _user_id: _DummyMailClient())
@@ -80,7 +83,7 @@ async def test_handler_login_sends_link(monkeypatch: pytest.MonkeyPatch) -> None
 @pytest.mark.asyncio
 async def test_handler_logout(monkeypatch: pytest.MonkeyPatch) -> None:
     chat_client = _DummyChatClient()
-    handler = main._make_chat_handler(chat_client)
+    handler = main._make_chat_handler(cast(chat_client_api.ChatClient, chat_client))
 
     monkeypatch.setattr(main, "_parse_command", lambda _content: ({"action": "logout"}, None))
     monkeypatch.setattr(main, "_get_mail_client", lambda _user_id: _DummyMailClient())
@@ -93,7 +96,7 @@ async def test_handler_logout(monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.mark.asyncio
 async def test_handler_not_logged_in_sends_login_link(monkeypatch: pytest.MonkeyPatch) -> None:
     chat_client = _DummyChatClient()
-    handler = main._make_chat_handler(chat_client)
+    handler = main._make_chat_handler(cast(chat_client_api.ChatClient, chat_client))
 
     monkeypatch.setattr(main, "_parse_command", lambda _content: ({"action": "get_messages"}, None))
     monkeypatch.setattr(main, "_get_mail_client", lambda _user_id: _DummyMailClient(raise_on_get=True))
@@ -106,7 +109,7 @@ async def test_handler_not_logged_in_sends_login_link(monkeypatch: pytest.Monkey
 @pytest.mark.asyncio
 async def test_handler_get_message_missing_id(monkeypatch: pytest.MonkeyPatch) -> None:
     chat_client = _DummyChatClient()
-    handler = main._make_chat_handler(chat_client)
+    handler = main._make_chat_handler(cast(chat_client_api.ChatClient, chat_client))
 
     monkeypatch.setattr(main, "_parse_command", lambda _content: ({"action": "get_message"}, None))
     monkeypatch.setattr(main, "_get_mail_client", lambda _user_id: _DummyMailClient())
@@ -119,7 +122,7 @@ async def test_handler_get_message_missing_id(monkeypatch: pytest.MonkeyPatch) -
 @pytest.mark.asyncio
 async def test_handler_mark_as_read_missing_id(monkeypatch: pytest.MonkeyPatch) -> None:
     chat_client = _DummyChatClient()
-    handler = main._make_chat_handler(chat_client)
+    handler = main._make_chat_handler(cast(chat_client_api.ChatClient, chat_client))
 
     monkeypatch.setattr(main, "_parse_command", lambda _content: ({"action": "mark_as_read"}, None))
     monkeypatch.setattr(main, "_get_mail_client", lambda _user_id: _DummyMailClient())
@@ -132,7 +135,7 @@ async def test_handler_mark_as_read_missing_id(monkeypatch: pytest.MonkeyPatch) 
 @pytest.mark.asyncio
 async def test_handler_delete_missing_id(monkeypatch: pytest.MonkeyPatch) -> None:
     chat_client = _DummyChatClient()
-    handler = main._make_chat_handler(chat_client)
+    handler = main._make_chat_handler(cast(chat_client_api.ChatClient, chat_client))
 
     monkeypatch.setattr(main, "_parse_command", lambda _content: ({"action": "delete_message"}, None))
     monkeypatch.setattr(main, "_get_mail_client", lambda _user_id: _DummyMailClient())
@@ -145,7 +148,7 @@ async def test_handler_delete_missing_id(monkeypatch: pytest.MonkeyPatch) -> Non
 def test_fallback_ai_reply(monkeypatch: pytest.MonkeyPatch) -> None:
     class _DummyAI:
         def generate_response(self, _content: str, **kwargs: object) -> str:
-            system_prompt = kwargs.get("system_prompt", "")
+            system_prompt = str(kwargs.get("system_prompt", ""))
             if "Parsing failed because: reason" in system_prompt:
                 return "failed: reason"
             return "hello"
@@ -157,7 +160,7 @@ def test_fallback_ai_reply(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_fallback_ai_reply_includes_reason(monkeypatch: pytest.MonkeyPatch) -> None:
     class _DummyAI:
         def generate_response(self, _content: str, **kwargs: object) -> str:
-            system_prompt = kwargs.get("system_prompt", "")
+            system_prompt = str(kwargs.get("system_prompt", ""))
             return "ok" if "Parsing failed because: bad" in system_prompt else "nope"
 
     monkeypatch.setattr(main.ai_client_api, "get_ai_client", lambda: _DummyAI())

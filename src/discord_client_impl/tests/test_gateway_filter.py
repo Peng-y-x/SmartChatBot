@@ -4,6 +4,7 @@ import pytest
 import discord
 
 from discord_client_impl.discord_impl import _DiscordGatewayClient
+from typing import cast
 
 
 class _DummyAuthor:
@@ -42,5 +43,5 @@ async def test_gateway_ignores_guild_messages() -> None:
         called = True
 
     client.set_message_handler(handler)
-    await client.on_message(_DummyMessage(guild="guild"))
+    await client.on_message(cast(discord.Message, _DummyMessage(guild="guild")))
     assert called is False
