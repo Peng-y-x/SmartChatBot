@@ -14,10 +14,18 @@ import ai_client_api
 import mail_client_api
 import chat_client_api
 
+import claude_client_impl
+import gmail_client_impl
+import discord_client_impl
+
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+
+claude_client_impl.register()
+gmail_client_impl.register()
+discord_client_impl.register()
 
 
 def _get_mail_client(user_id: str) -> mail_client_api.MailClient:

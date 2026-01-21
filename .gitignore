@@ -138,6 +138,12 @@ celerybeat.pid
 .env
 .envrc
 .venv
+#terraform
+.terraform/
+**/terraform.tfvars
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/_schema.json
 env/
 venv/
 ENV/
@@ -211,3 +217,4 @@ credentials.json
 
 # gmail oauth
 src/gmail_client_impl/gmail_tokens.sqlite
+
