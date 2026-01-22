@@ -45,12 +45,12 @@ members = [
 ]
 
 [tool.uv.sources]
-chat-client-api = { workspace = true, editable = true }
-discord-client-impl = { workspace = true, editable = true }
-ai-client-api = { workspace = true, editable = true }
-claude-client-impl = { workspace = true, editable = true }
-mail-client-api = { workspace = true, editable = true }
-gmail-client-impl = { workspace = true, editable = true }
+chat-client-api = { workspace = true }
+discord-client-impl = { workspace = true }
+ai-client-api = { workspace = true }
+claude-client-impl = { workspace = true }
+mail-client-api = { workspace = true }
+gmail-client-impl = { workspace = true }
 
 [tool.pytest.ini_options]
 addopts = "--cov --cov-report=term-missing --cov-fail-under=60"
