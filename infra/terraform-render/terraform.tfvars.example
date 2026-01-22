@@ -1,0 +1,9 @@
+render_owner_id = "tea-"
+render_api_key = "rnd_"
+repo_url        = "https://github.com/yourname/SmartChatBot.git"
+branch          = "main"
+region          = "virginia"
+service_name    = "smart-chat-bot"
+discord_bot_token = "REPLACE_ME"
+anthropic_api_key = ""
+
